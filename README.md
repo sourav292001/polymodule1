@@ -13,7 +13,7 @@ NFTs have gained significant popularity as unique digital assets, often represen
 
 .Node.js and npm: Latest versions of Node.js and npm for development.
 
-Steps:-
+## Steps:-
 1. NFT Collection Creation
 Decide the theme or concept of your NFT collection.
 Generate a dataset or input for the image generation tool (DALLE 2/Midjourney).
