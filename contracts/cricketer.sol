@@ -2,10 +2,11 @@
 
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "erc721a/contracts/ERC721A.sol";
 
-contract CricketerNFT is ERC721URIStorage, Ownable {
+contract cricketer is ERC721A {
+    address public owner;
+
     // Maximum number of tokens that can be minted
     uint256 public maxQuantity = 5;
 
@@ -15,30 +16,28 @@ contract CricketerNFT is ERC721URIStorage, Ownable {
     // URL for the prompt description
     string public prompt = "A cricketer wearing blue jersey cheering the crowd";
 
-    constructor() ERC721("CricketerNFT", "CRT") {}
-
-    // Function to mint NFTs, only owner can perform
-    function mint(address to, uint256 quantity) external onlyOwner {
-        require(totalSupply() + quantity <= maxQuantity, "Cannot mint more than maxQuantity");
-        for (uint256 i = 0; i < quantity; i++) {
-            uint256 tokenId = totalSupply();
-            _mint(to, tokenId);
-            _setTokenURI(tokenId, string(abi.encodePacked(baseUrl, tokenId.toString())));
-        }
+    constructor() ERC721("cricketer", "CRT") {
+         owner = msg.sender;
+    }
+    // Modifier that only allows the owner to excute a function
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can perform this action!");
+         ;
     }
 
-    // Update the base URL for the NFTs
-    function updateBaseUrl(string memory newBaseUrl) external onlyOwner {
-        baseUrl = newBaseUrl;
-    }
-
-    // Update the prompt description
-    function updatePrompt(string memory newPrompt) external onlyOwner {
-        prompt = newPrompt;
-    }
-
-    // Return the URL for the prompt description
-    function getPromptDescription() external view returns (string memory) {
-        return prompt;
-    }
-}
+    // Function to mint NFT which only owner can perform
+    function mint (uint256 quantity) external payable onlyowner {
+        require(
+            totalSupply() + quantity <= maxQuantity,
+            "You can not mint more than 5"
+        );
+        _mint(msg. sender, quantity);
+        // Override the baseURI function to return the base URL for the NFTs
+        function_baseURI() internal view override returns (string memory) {
+            return baseUrl;
+         }
+         // return the URI for the prompt description
+         function promptDescription() external view returns (string memory) {
+             return prompt;
+         }
+  }
