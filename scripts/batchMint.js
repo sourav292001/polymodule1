@@ -1,38 +1,40 @@
+// This script batch mints criceket ERC721A tokens.
+
+// Import required libraries
 const { ethers } = require("hardhat");
 require("dotenv").config();
 
-async function batchMintTokens() {
-  try {
-    // Get private key from env
-    const privateKey = process.env.PRIVATE_KEY;
+async function main() {
+  // Get private key from env
+  const privateKey = process.env.PRIVATE_KEY;
 
-    // The URL of the network provider
-    const networkUrl = "https://eth-goerli.alchemyapi.io/v2/your-alchemy-api-key";
+  // The URL of the network provider
+  const networkAddress =
+    "https://eth-goerli.g.alchemy.com/v2/h-asDNMJ21mVniDAY3XE1VQ9F7PW7A0x";
 
-    // Create a provider using the URL
-    const provider = new ethers.providers.JsonRpcProvider(networkUrl);
+  // Create a provider using the URL
+  const provider = new ethers.providers.JsonRpcProvider(networkAddress);
 
-    // Create a wallet instance from the private key and provider
-    const wallet = new ethers.Wallet(privateKey, provider);
+  // Create a signer from the private key and provider
+  const signer = new ethers.Wallet(privateKey, provider);
 
-    // The address of the deployed contract
-    const contractAddress = "0x2241bdE6016B7FFa0A74C8907a6E26101C0BA4F0";
+  // Tthe address of the deployed contract
+  const contractAddress = "0x032DB7b9DD6EB0cFFD06183515D77D5567E68037";
 
-    // Get the contract factory and attach it to the wallet
-    const NFTFactory = await ethers.getContractFactory("cricketer", wallet);
-    const nftContract = await NFTFactory.attach(contractAddress);
+  // Get the contract factory and attach it to the signer
+  const IndianNFT = await ethers.getContractFactory("cricketer", signer);
+  const contract = await IndianNFT.attach(contractAddress);
 
-    // Batch mint 5 tokens
-    const mintTx = await nftContract.mint(5);
-    await mintTx.wait();
+  // Call the mint function on the contract to mint 5 tokens
+  await contract.mint(5);
 
-    // Log a message to indicate successful minting
-    console.log("Successfully minted 5 tokens");
-  } catch (error) {
-    console.error("An error occurred during token minting:", error);
-    process.exit(1);
-  }
+  // Log a message to the console to indicate that the tokens have been minted
+  console.log("Minted 5 tokens");
 }
 
-// Call the batch mint function
-batchMintTokens();
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
