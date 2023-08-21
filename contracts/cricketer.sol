@@ -32,10 +32,15 @@ contract cricketer is ERC721A {
             "You can not mint more than 5"
         );
         _mint(msg. sender, quantity);
+    }
+
+
         // Override the baseURI function to return the base URL for the NFTs
         function_baseURI() internal view override returns (string memory) {
             return baseUrl;
          }
+
+
          // return the URI for the prompt description
          function promptDescription() external view returns (string memory) {
              return prompt;
